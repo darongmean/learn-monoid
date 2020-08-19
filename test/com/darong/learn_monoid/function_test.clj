@@ -20,6 +20,7 @@
     [clojure.test.check.generators :as gen]
     [com.gfredericks.test.chuck.clojure-test :refer [checking]]))
 
+
 (deftest integer-under-addition-is-monoid
   (checking "it is closed" 100
     [x gen/small-integer
@@ -33,6 +34,7 @@
   (checking "it has identity value 0" 100
     [x gen/small-integer]
     (is (= x (+ x 0) (+ 0 x)))))
+
 
 (deftest integer-under-multiplication-is-monoid
   (checking "it is closed" 100
@@ -48,6 +50,7 @@
     [x gen/small-integer]
     (is (= x (* x 1) (* 1 x)))))
 
+
 (deftest integer-under-subtraction-is-not-monoid
   (checking "it is closed" 100
     [x gen/small-integer
@@ -58,6 +61,7 @@
      y (gen/such-that #(not= 0 %) gen/small-integer)
      z (gen/such-that #(not= 0 %) gen/small-integer)]
     (is (not= (- (- x y) z) (- x (- y z))))))
+
 
 (deftest integer-under-max-is-monoid
   (checking "it is closed" 100
