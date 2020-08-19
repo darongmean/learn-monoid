@@ -33,3 +33,42 @@
   (checking "it has identity value 0" 100
     [x gen/small-integer]
     (is (= x (+ x 0) (+ 0 x)))))
+
+(deftest integer-under-multiplication-is-monoid
+  (checking "it is closed" 100
+    [x gen/small-integer
+     y gen/small-integer]
+    (is (integer? (* x y))))
+  (checking "it is associative" 100
+    [x gen/small-integer
+     y gen/small-integer
+     z gen/small-integer]
+    (is (= (* (* x y) z) (* x (* y z)))))
+  (checking "it has identity value 1" 100
+    [x gen/small-integer]
+    (is (= x (* x 1) (* 1 x)))))
+
+(deftest integer-under-subtraction-is-not-monoid
+  (checking "it is closed" 100
+    [x gen/small-integer
+     y gen/small-integer]
+    (is (integer? (- x y))))
+  (checking "it is not associative" 100
+    [x (gen/such-that #(not= 0 %) gen/small-integer) ; 0 is special case but not identity value
+     y (gen/such-that #(not= 0 %) gen/small-integer)
+     z (gen/such-that #(not= 0 %) gen/small-integer)]
+    (is (not= (- (- x y) z) (- x (- y z))))))
+
+(deftest integer-under-max-is-monoid
+  (checking "it is closed" 100
+    [x gen/small-integer
+     y gen/small-integer]
+    (is (integer? (max x y))))
+  (checking "it is associative" 100
+    [x gen/small-integer
+     y gen/small-integer
+     z gen/small-integer]
+    (is (= (max (max x y) z) (max x (max y z)))))
+  (checking "it has identity value Integer/MIN_VALUE" 100
+    [x gen/small-integer]
+    (is (= x (max x Integer/MIN_VALUE) (max Integer/MIN_VALUE x)))))
