@@ -25,6 +25,8 @@
             ;; on by default, then disable it when necessary with `--no-watch`.
             :watch? true
 
+            :fail-fast? true
+
             ;; Specifiy the reporter function that generates output. Must be a namespaced
             ;; symbol, or a vector of symbols. The symbols must refer to vars, which Kaocha
             ;; will make sure are loaded. When providing a vector of symbols, or pointing

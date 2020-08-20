@@ -123,3 +123,146 @@
           y 1.0
           z 0.5]
       (is (not= (/ (/ x y) z) (/ x (/ y z)))))))
+
+
+;; Positive Number
+
+
+(deftest positive-number-under-addition-is-semigroup
+  (let [positive-number (gen/such-that pos? gen/nat)]
+    (checking "it is closed" 100
+      [x positive-number
+       y positive-number]
+      (is (integer? (+ x y))))
+    (checking "it is associative" 100
+      [x positive-number
+       y positive-number
+       z positive-number]
+      (is (= (+ (+ x y) z) (+ x (+ y z)))))
+    (checking "it has no identity value" 100
+      [x positive-number
+       y positive-number]
+      (is (not= x (+ x y) (+ y x))))))
+
+
+(deftest positive-number-under-multiplication-is-monoid
+  (let [positive-number (gen/such-that pos? gen/nat)]
+    (checking "it is closed" 100
+      [x positive-number
+       y positive-number]
+      (is (integer? (* x y))))
+    (checking "it is associative" 100
+      [x positive-number
+       y positive-number
+       z positive-number]
+      (is (= (* (* x y) z) (* x (* y z)))))
+    (checking "it has identity value 1" 100
+      [x positive-number]
+      (is (= x (* x 1) (* 1 x))))))
+
+
+;;; Boolean
+
+
+(deftest boolean-under-and-is-monoid
+  (checking "it is closed" 100
+    [x gen/boolean
+     y gen/boolean]
+    (is (boolean? (and x y))))
+  (checking "it is associative" 100
+    [x gen/boolean
+     y gen/boolean
+     z gen/boolean]
+    (is (= (and (and x y) z) (and x (and y z)))))
+  (checking "it has identity value true" 100
+    [x gen/boolean]
+    (is (= x (and x true) (and true x)))))
+
+
+(deftest boolean-under-or-is-monoid
+  (checking "it is closed" 100
+    [x gen/boolean
+     y gen/boolean]
+    (is (boolean? (or x y))))
+  (checking "it is associative" 100
+    [x gen/boolean
+     y gen/boolean
+     z gen/boolean]
+    (is (= (or (or x y) z) (or x (or y z)))))
+  (checking "it has identity value false" 100
+    [x gen/boolean]
+    (is (= x (or x false) (or false x)))))
+
+
+;;; String
+
+
+(deftest string-under-concatenation-is-monoid
+  (checking "it is closed" 100
+    [x gen/string
+     y gen/string]
+    (is (string? (str x y))))
+  (checking "it is associative" 100
+    [x gen/string
+     y gen/string
+     z gen/string]
+    (is (= (str (str x y) z) (str x (str y z)))))
+  (checking "it has identity value empty string" 100
+    [x gen/string]
+    (is (= x (str x "") (str "" x)))))
+
+
+(deftest string-under-equality-is-not-monoid
+  (checking "it is not closed" 100
+    [x gen/string
+     y gen/string]
+    (is (not (string? (= x y))))))
+
+
+(deftest string-under-subtract-chars-is-not-monoid
+  (let [subtract-char (fn [coll chars]
+                        (apply str (remove #((set chars) %) coll)))]
+    (checking "it is closed" 100
+      [x gen/string
+       y gen/string]
+      (is (string? (subtract-char x y))))
+    (testing "it is not associative"
+      (let [x "3"
+            y ""
+            z "3"]
+        (is (not= (subtract-char (subtract-char x y) z)
+                  (subtract-char x (subtract-char y z))))))))
+
+
+;;; List
+
+
+(deftest list-under-concatenation-is-monoid
+  (checking "it is closed" 100
+    [x (gen/vector gen/any)
+     y (gen/vector gen/any)]
+    (is (seq? (concat x y))))
+  (checking "it is associative" 100
+    [x (gen/vector gen/any)
+     y (gen/vector gen/any)
+     z (gen/vector gen/any)]
+    (is (= (concat (concat x y) z) (concat x (concat y z)))))
+  (checking "it has identity value empty list" 100
+    [x (gen/vector gen/any)]
+    (is (= x (concat x []) (concat [] x)))))
+
+
+(deftest list-under-intersection-is-semigroup
+  (checking "it is closed" 100
+    [x (gen/set gen/any)
+     y (gen/set gen/any)]
+    (is (set? (clojure.set/intersection x y))))
+  (checking "it is associative" 100
+    [x (gen/set gen/any)
+     y (gen/set gen/any)
+     z (gen/set gen/any)]
+    (is (= (clojure.set/intersection (clojure.set/intersection x y) z)
+           (clojure.set/intersection x (clojure.set/intersection y z)))))
+  (testing "it has not identity value"
+    (let [x #{0}]
+      (is (not= x (clojure.set/intersection x #{}))))))
