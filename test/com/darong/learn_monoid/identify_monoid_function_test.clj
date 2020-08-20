@@ -1,4 +1,4 @@
-(ns com.darong.learn-monoid.function-test
+(ns com.darong.learn-monoid.identify-monoid-function-test
   "Monoids are not really a design pattern; more an approach to working with many different types
    of values in a common way.
 
@@ -12,6 +12,21 @@
      you do first doesn’t matter.
    - Rule 3 (Identity element): There is a special thing called “zero” such that when you combine
      any thing with “zero” you get the original thing back.
+
+   The benefit of closure: if we can define a pairwise operation, we can extend it to list operations
+   “for free”. The function that does this is typically called “reduce”.
+
+   The benefit of associativity: if the pairwise combinations can be done in any order, that opens up
+   some interesting implementation techniques, such as:
+   - Divide and conquer algorithms
+   - Parallelization
+   - Incrementalism (monoid homomorphisms)
+
+   The benefit of identity: having an identity element is not always required, but it helps answer
+   the questions
+   - How can I use reduce on an empty list?
+   - If I am designing a divide and conquer algorithm, what should I do if one of the “divide” steps has nothing in it?
+   - When using an incremental algorithm, what value should I start with when I have no data?
 
    See https://fsharpforfunandprofit.com/posts/monoids-without-tears/
   "
