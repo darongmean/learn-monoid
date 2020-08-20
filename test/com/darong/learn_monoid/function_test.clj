@@ -21,6 +21,9 @@
     [com.gfredericks.test.chuck.clojure-test :refer [checking]]))
 
 
+;;; Integer
+
+
 (deftest integer-under-addition-is-monoid
   (checking "it is closed" 100
     [x gen/small-integer
@@ -76,3 +79,47 @@
   (checking "it has identity value Integer/MIN_VALUE" 100
     [x gen/small-integer]
     (is (= x (max x Integer/MIN_VALUE) (max Integer/MIN_VALUE x)))))
+
+
+(deftest integer-under-equality-is-not-monoid
+  (checking "it is not closed" 100
+    [x gen/small-integer
+     y gen/small-integer]
+    (is (not (integer? (= x y))))))
+
+
+(deftest integer-under-less-than-is-not-monoid
+  (checking "it is not closed" 100
+    [x gen/small-integer
+     y gen/small-integer]
+    (is (not (integer? (< x y))))))
+
+
+;;; Float
+
+
+(deftest float-under-multiplication-is-not-monoid
+  (checking "it is closed" 100
+    [x gen/double
+     y gen/double]
+    (is (double? (* x y))))
+  (testing "it is not associative"
+    (let [x 1.5
+          y 1.2313690185548012
+          z 1.751953125]
+      (is (not= (* (* x y) z) (* x (* y z))))))
+  (checking "it has identity value 1" 100
+    [x (gen/double* {:NaN? false})]
+    (is (= x (* x 1) (* 1 x)))))
+
+
+(deftest float-under-division-is-not-monoid
+  (checking "it is closed" 100
+    [x (gen/such-that #(not= 0.0 %) gen/double)
+     y (gen/such-that #(not= 0.0 %) gen/double)]
+    (is (double? (/ x y))))
+  (testing "it is not associative"
+    (let [x 1.0
+          y 1.0
+          z 0.5]
+      (is (not= (/ (/ x y) z) (/ x (/ y z)))))))
