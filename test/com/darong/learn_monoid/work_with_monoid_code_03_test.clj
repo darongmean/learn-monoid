@@ -39,7 +39,7 @@
        (map to-stats)
        (reduce add-line-monoid)))
 
-(deftest ^:focus aggregate-customer-stats-monoid-test
+(deftest aggregate-customer-stats-monoid-test
   (testing "checking customer type"
     (is (s/valid? (spec/coll-of ::model/Customer) customers)))
   (checking "to-stats has no error" 100
