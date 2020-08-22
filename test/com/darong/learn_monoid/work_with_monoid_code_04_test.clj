@@ -53,12 +53,9 @@
 
 
 (defn word-count [s]
-  (if (string/blank? s)
-    0
-    (-> s
-        (string/trim)
-        (string/split #" +")
-        (count))))
+  (->> (string/split s #" +")
+       (remove string/blank?)
+       (count)))
 
 (deftest word-count-test
   (testing "checking result"
@@ -104,13 +101,15 @@
     (is (= 0 (->> [""] word-count-via-add-text)))
     (is (= 1 (->> [" " "!"] word-count-via-add-text)))
     (is (= 2 (->> ["!" "!"] word-count-via-add-text)))
-    (is (= 2 (->> ["!" " !"] word-count-via-add-text))))
+    (is (= 2 (->> ["!" " !"] word-count-via-add-text)))
+    (is (= 0 (->> ["" "\t" ""] word-count-via-add-text))))
   (testing "check map count then add"
     (is (= 0 (->> [""] word-count-via-add-map)))
     (is (= 1 (->> [" " "!"] word-count-via-add-map)))
     (is (= 2 (->> ["!" "!"] word-count-via-add-map)))
-    (is (= 2 (->> ["!" " !"] word-count-via-add-map))))
-  (checking "word count preserve the shape" 100
+    (is (= 2 (->> ["!" " !"] word-count-via-add-map)))
+    (is (= 0 (->> ["" "\t" ""] word-count-via-add-map))))
+  (checking "word count preserve the shape" {:num-tests 100 :seed 1598106679362}
     [xs (gen/vector gen/string)]
     (is (= (->> xs word-count-via-add-text)
            (->> xs word-count-via-add-map)))))
