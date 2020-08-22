@@ -1,26 +1,16 @@
 # learn-monoid
 
-FIXME: my new library.
+Follow along https://fsharpforfunandprofit.com/series/understanding-monoids.html series in Clojure.
 
 ## Usage
 
-FIXME: write usage documentation!
+Run the tests with: 
 
-Build a deployable jar of this library:
-
-    $ clojure -A:jar
-
-Install it locally:
-
-    $ clojure -A:install
-
-Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables:
-
-    $ clojure -A:deploy
+    $ clojure -A:test:test-runner-kaocha
 
 ## License
 
-Copyright © 2020 Darong
+Copyright © 2020 Darong Mean
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
